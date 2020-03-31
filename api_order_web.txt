@@ -1,0 +1,149 @@
+1. Hàm tìm kiếm đơn hàng:
+	+ Link: 
+	http://10.60.155.11:8099/services/order/OrderService?wsdl
+	
+	+ Request
+	<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	  <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+		<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1">
+		  <wsse:UsernameToken wsu:Id="UsernameToken-e5a2e0ce-af85-41ea-b62a-4035575a9647">
+			<wsse:Username>order</wsse:Username>
+			<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">uF#2298w4@</wsse:Password>
+		  </wsse:UsernameToken>
+		</wsse:Security>
+	  </SOAP-ENV:Header>
+	  <soap:Body>
+		<ns2:searchOrdersV2 xmlns:ns2="http://service.order.bccs.viettel.com/">
+		  <searchDTO>
+			<!--	  	Ngày tạo đơn hàng từ ngày-->
+			<fromCreateDate>2019-04-01T00:00:00+07:00</fromCreateDate>
+			<!--	  	Ngày tạo đơn hàng đến ngày-->
+			<toCreateDate>2019-04-19T23:59:00+07:00</toCreateDate>
+			<!--	  	Loại đơn hàng-->
+			<lstOrderTypeCode>V_TRACKING</lstOrderTypeCode>
+			<!--	  	Kênh tiếp nhận đơn hàng (Kênh website solution)-->		
+			<filters>
+				<operator>EQ</operator>
+				<property>RECEPTION_CHANNEL</property>
+				<valueText>WEB_SOLUTION</valueText>
+		   </filters>
+		  </searchDTO>
+		  <!--	  	Phân trang-->	  
+		  <page>0</page>
+		  <!--	  	Số bản ghi trong 1 trang-->
+		  <pageSize>500</pageSize>
+		</ns2:searchOrdersV2>
+	  </soap:Body>
+	</soap:Envelope>
+
+2. Hàm tạo đơn hàng
+	+ Link: http://10.60.155.11:8099/services/order/OrderAppmCRMService?wsdl
+	
+	+ Request:
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.order.bccs.viettel.com/">
+	   <soapenv:Header>
+		  <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+			 <wsse:UsernameToken wsu:Id="UsernameToken-32ce50e8-4a5d-4040-af71-c3428d92daa7">
+				<wsse:Username>order</wsse:Username>
+				<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">uF#2298w4@</wsse:Password>
+			 </wsse:UsernameToken>
+		  </wsse:Security>
+	   </soapenv:Header>
+	   <soapenv:Body>
+		  <ser:createOrder>
+			 <!--Thong tin ma dich vu, cach nhau boi dau ,:-->
+			 <orderType>V_TRACKING</orderType>
+			 <!--Thong tin don hang:-->
+			 <data>
+			<!--So dien thoai khach hang-->
+			 {"isdn":"0983434459",
+			<!--Phan thong tin khach hang-->
+			 "customer":{
+					<!--Ten khach hang-->
+						 "name":"Tran Xuan Truong",
+					<!--So giay to-->
+						 "idNo":"168472432",
+					<!--Loai giay to-->
+						 "idType":"ID"},
+			<!--Phan thong tin dia chi-->
+			 "address":{
+					<!--Ma tinh thanh pho-->
+						"province":"H004",
+					<!--Ma quan huyen-->
+						"district":"003",
+					<!--Ma phuong xa-->
+						"precinct":"012",
+					<!--So nha cu the-->
+						"address":"nha so 113",
+					<!--Dia chi cu the-->
+						"fullAddress":"nha so 113 Cống Vị Ba Đình Hà Nội",
+					<!--Ma dia ban: = ma Tinh + ma huyen + ma xa-->
+						"areaCode":"H004003012",
+					<!--Ma dia ban cap huyen = ma Tinh + ma Huyen-->
+						"districtCode":"H004003"},
+			<!--Phuong thuc giao dich: HOME = tai nha-->
+				"transactionPlace":"HOME",
+			<!--Thong tin thanh toan, dat mac dinh nhu tham so mau-->
+				"payInfo":{"immediatePay":false,"cardRecords":[]},
+			<!--Phi phat sinh, dat mac dinh bang 0-->
+				"totalFee":0,
+			<!--Thoi gian hen = ngay hen chi tiet toi gio, phut-->
+				"planFrom":1581328350000,
+			<!--Thoi gian hen = ngay hen + 30 phut-->
+			"planTo":1581326550000,
+			<!--Noi dung yeu cau-->
+			"orderContent":"Yeu cau tao moi don hang",
+			<!--Trang thai chot sale, 1: da chot ban hang, 2: can tu van them-->
+				"saleStatus":"1",
+			<!--Trang thai giao viec:1 la giao viec tu dong (khong can truyen assignStaffId)
+			,2 la giao viec chi dinh (can truyen assignStaffId)-->
+				"assignType":"2",
+				<!--Id Nhan vien duoc giao don hang:-->
+				"assignStaffId":"436620",
+			<!--Email-->
+				"email":"truongtx.uet.238@gmail.com",
+			"target": "Kênh Telesale In - VTS",
+		    "receptionChannel": "TELESALE_IN"
+		  }
+		</data>
+			 <!--user name tao moi don hang:-->
+			 <userName>vtt1</userName>
+		  </ser:createOrder>
+	   </soapenv:Body>
+	</soapenv:Envelope>
+	
+3. Hàm lấy danh sách loại giấy tờ
+	+Link: http://10.60.155.11:8099/services/order/IdentityTypeService?wsdl
+	
+	+ Request:
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.order.bccs.viettel.com/">
+	   <soapenv:Header>
+		  <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+			 <wsse:UsernameToken wsu:Id="UsernameToken-32ce50e8-4a5d-4040-af71-c3428d92daa7">
+				<wsse:Username>order</wsse:Username>
+				<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">uF#2298w4@</wsse:Password>
+			 </wsse:UsernameToken>
+		  </wsse:Security>
+	   </soapenv:Header>
+	   <soapenv:Body>
+		  <ser:getAllIdentityType/>
+	   </soapenv:Body>
+	</soapenv:Envelope>
+
+4. Hàm lấy danh sách Loại đơn hàng:
+	+ Link: http://10.60.155.11:8099/services/order/OrderTypeService?wsdl
+	
+	+ Request:
+	<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.order.bccs.viettel.com/">
+	   <soapenv:Header>
+		  <wsse:Security soapenv:mustUnderstand="1" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+			 <wsse:UsernameToken wsu:Id="UsernameToken-32ce50e8-4a5d-4040-af71-c3428d92daa7">
+				<wsse:Username>order</wsse:Username>
+				<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">uF#2298w4@</wsse:Password>
+			 </wsse:UsernameToken>
+		  </wsse:Security>
+	   </soapenv:Header>
+	   <soapenv:Body>
+		  <ser:getAllOrderType/>
+	   </soapenv:Body>
+	</soapenv:Envelope>
