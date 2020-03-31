@@ -1,0 +1,2 @@
+file csv-form :  testcsv.csv
+file generate mysql db : test.sql
