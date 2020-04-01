@@ -35,7 +35,7 @@ $(document).ready(function () {
     var $remove = $('#remove')
     var selections = []
     var listData = [];
-    var user = {};
+    var role = {};
     window.ajaxOptions = {
         beforeSend: function (xhr) {
             xhr.setRequestHeader(header, token)
@@ -55,7 +55,7 @@ $(document).ready(function () {
 
     function operateFormatter(value, row, index) {
         return [
-            '<a class="eye" href="javascript:void(0)"  data-toggle=\"modal\" data-target=\"#userModal\" title="Edit">',
+            '<a class="eye" href="javascript:void(0)"  data-toggle=\"modal\" data-target=\"#roleModal\" title="Edit">',
             '<i class="fa fa-fw" aria-hidden="true" title="Edit"></i>',
             '</a>  ',
             '<a class="remove" href="javascript:void(0)" title="Remove">',
@@ -92,25 +92,20 @@ $(document).ready(function () {
 
     window.operateEvents = {
         'click .eye': function (e, value, row, index) {
-            user = row;
-            console.log(user)
+            role = row;
+            console.log(role)
 
-            $("#edit-name").val(user.name);
-            $("#edit-phone").val(user.phoneNumber);
-            $("#edit-addr").val(user.addr);
-            if (user.birthDate != null) {
-                var d = new Date(user.birthDate );
-                var day = ("0" + d.getDate()).slice(-2);
-                var month = ("0" + (d.getMonth() + 1)).slice(-2);
+            $("#edit-status").val(role.status);
+            $("#edit-roleName").val(role.roleName);
+            // role.birthDate = new Date($("#edit-birth").val());
+            $("#edit-description").val(role.description);
+            $("#edit-roleCode").val(role.roleCode);
+            $("#edit-roleOrder").val(role.roleOrder);
 
-                var date = d .getFullYear() + "-" + (month) + "-" + (day);
-                $("#edit-birth").val(date);
-
-            }
 
         },
         'click .remove': function (e, value, row, index) {
-            user = row;
+            role = row;
             $("#delete").click();
         }
     }
@@ -240,39 +235,49 @@ $(document).ready(function () {
         getData();
     })
     $("#create").click(function () {
-        user ={};
-        $("#edit-name").val("");
-        $("#edit-phone").val("");
-        $("#edit-birth").val("");
-        $("#edit-addr").val("");
+        role ={};
+
+        $("#edit-status").val();
+        $("#edit-roleName").val();
+        $("#edit-description").val();
+        $("#edit-roleCode").val();
+        $("#edit-roleOrder").val();
     })
 
     $("#btn-save").click(function () {
-        user.name =$("#edit-name").val();
-        user.phoneNumber = $("#edit-phone").val();
-        user.birthDate = new Date($("#edit-birth").val());
-        user.addr = $("#edit-addr").val();
+        role.status =$("#edit-status").val();
+        role.roleName = $("#edit-roleName").val();
+        // role.birthDate = new Date($("#edit-birth").val());
+        role.description = $("#edit-description").val();
+        role.roleCode = $("#edit-roleCode").val();
+        role.roleOrder = $("#edit-roleOrder").val();
 
-        if (user.name == null || user.name.trim() == "") {
+        if (role.roleName == null || role.roleName.trim() == "") {
             toastr["warning"]("Thông Báo ! Tên không được để trống");
-        } else if (user.phoneNumber == null) {
+        } else if (role.status == null) {
             toastr["warning"]("Thông Báo ! Số DT không được để trống");
-        } else if ( user.birthDate == null) {
+        } else if ( role.description == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+        }else if ( role.roleCode == null) {
+            toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+        }else if ( role.roleOrder == null) {
+            toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+
+
         } else {
             $.ajax({
                 type: "POST",
                 contentType: "application/json", headers: {
                     header, token
                 },
-                url: "/saveUser",
+                url: "/saveRole",
                 dataType: 'json',
                 cache: false,
-                data: JSON.stringify(user) ,
+                data: JSON.stringify(role) ,
                 timeout: 600000,
                 success: function (data) {
-                    toastr["success"]("Thành Công ! </br>Thêm mới thành công");
-                    user = data;
+                    toastr["success"]("Thành Công ! </br>Cập nhật thành công");
+                    role = data;
                     getData();
                 },
                 error: function (data) {
@@ -284,11 +289,11 @@ $(document).ready(function () {
 
 
     $("#delete").click(function () {
-        var r = confirm("Bạn có chắc chắn muốn xóa  '" + user.name + "'");
+        var r = confirm("Bạn có chắc chắn muốn xóa  '" + role.roleName+ "'");
 
         if (r == true) {
             $.ajax({
-                url: 'deleteUser',
+                url: '/deleteRole',
                 dataType: 'json',
                 type: 'POST',
                 headers: {
@@ -296,7 +301,7 @@ $(document).ready(function () {
                 },
                 cache: false,
                 contentType: 'application/json',
-                data: JSON.stringify(user),
+                data: JSON.stringify(role),
 
                 success: function (data) {
 
@@ -316,45 +321,7 @@ $(document).ready(function () {
         }
     })
 
-    $("#uploadBtn").click(function (event) {
 
-        // Stop default form Submit.
-        event.preventDefault();
 
-        // Get form
-        var form = $('#singleUploadForm2')[0];
-
-        var data = new FormData(form);
-
-        // Call Ajax Submit.
-        ajaxSubmitForm(data, "/upload-csv-file");
-    });
-
-    function ajaxSubmitForm(data, url) {
-
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            headers: {
-                header, token
-            },
-            url: url,
-            data: data,
-
-            // prevent jQuery from automatically transforming the data into a query string
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 1000000,
-            success: function (data) {
-                toastr["success"]("Thành Công ! Import thành công");
-                getData();
-
-            },
-            error: function (jqXHR) {
-                toastr["error"]("Thất Bại ! Đã có lỗi xảy ra vui lòng thử lại sau");
-            }
-        });
-    }
 
 })

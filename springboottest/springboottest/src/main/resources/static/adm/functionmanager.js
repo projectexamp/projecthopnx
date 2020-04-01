@@ -89,18 +89,25 @@ $(document).ready(function () {
             func = row;
             console.log(func)
 
-            $("#edit-name").val(func.name);
-            $("#edit-phone").val(func.phoneNumber);
-            $("#edit-addr").val(func.addr);
-            if (func.birthDate != null) {
-                var d = new Date(func.birthDate);
-                var day = ("0" + d.getDate()).slice(-2);
-                var month = ("0" + (d.getMonth() + 1)).slice(-2);
+            $("#edit-status").val(func.status);
+            $("#edit-functionOrder").val(func.functionOrder);
+            $("#edit-functionUrl").val(func.functionUrl);
+            $("#edit-functionName").val(func.functionName);
+            $("#edit-description").val(func.description);
+            $("#edit-functionCode").val(func.functionCode);
 
-                var date = d.getFullYear() + "-" + (month) + "-" + (day);
-                $("#edit-birth").val(date);
-
-            }
+            // $("#edit-name").val(func.name);
+            // $("#edit-phone").val(func.phoneNumber);
+            // $("#edit-addr").val(func.addr);
+            // if (func.birthDate != null) {
+            //     var d = new Date(func.birthDate);
+            //     var day = ("0" + d.getDate()).slice(-2);
+            //     var month = ("0" + (d.getMonth() + 1)).slice(-2);
+            //
+            //     var date = d.getFullYear() + "-" + (month) + "-" + (day);
+            //     $("#edit-birth").val(date);
+            //
+            // }
 
         },
         'click .remove': function (e, value, row, index) {
@@ -243,37 +250,52 @@ $(document).ready(function () {
     })
     $("#create").click(function () {
         func = {};
-        $("#edit-name").val("");
-        $("#edit-phone").val("");
-        $("#edit-birth").val("");
-        $("#edit-addr").val("");
+        $("#edit-status").val("");
+        $("#edit-functionOrder").val("");
+        $("#edit-functionUrl").val("");
+        $("#edit-functionName").val();
+        $("#edit-description").val();
+        $("#edit-functionCode").val();
     })
 
     $("#btn-save").click(function () {
-        func.name = $("#edit-name").val();
-        func.phoneNumber = $("#edit-phone").val();
-        func.birthDate = new Date($("#edit-birth").val());
-        func.addr = $("#edit-addr").val();
+        func.status = $("#edit-status").val();
+        func.functionOrder = $("#edit-functionOrder").val();
+        // func.functionUrl = new Date($("edit-functionUrl").val());
+        func.functionUrl = $("#edit-functionUrl").val() ;
+        func.functionName = $("#edit-functionName").val();
+        func.description = $("#edit-description").val();
+        func.functionCode = $("#edit-functionCode").val();
 
-        if (func.name == null || func.name.trim() == "") {
+
+
+        if (func.status == null || func.status.trim() == "") {
             toastr["warning"]("Thông Báo ! Tên không được để trống");
-        } else if (func.phoneNumber == null) {
+        } else if (func.functionOrder == null) {
             toastr["warning"]("Thông Báo ! Số DT không được để trống");
-        } else if (func.birthDate == null) {
+        } else if (func.functionUrl == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+        }else if (func.functionName == null) {
+            toastr["warning"]("Thông Báo ! Số DT không được để trống");
+        }else if (func.description == null) {
+            toastr["warning"]("Thông Báo ! Số DT không được để trống");
+        }
+        else if (func.functionCode == null) {
+            toastr["warning"]("Thông Báo ! Số DT không được để trống");
+
         } else {
             $.ajax({
                 type: "POST",
                 contentType: "application/json", headers: {
                     header, token
                 },
-                url: "/saveUser",
+                url: "/saveFunction",
                 dataType: 'json',
                 cache: false,
                 data: JSON.stringify(func),
                 timeout: 600000,
                 success: function (data) {
-                    toastr["success"]("Thành Công ! </br>Thêm mới thành công");
+                    toastr["success"]("Thành Công ! </br>Cập nhật thành công");
                     func = data;
                     getData();
                 },
@@ -286,11 +308,11 @@ $(document).ready(function () {
 
 
     $("#delete").click(function () {
-        var r = confirm("Bạn có chắc chắn muốn xóa  '" + func.name + "'");
+        var r = confirm("Bạn có chắc chắn muốn xóa  '" + func.functionName + "'");
 
         if (r == true) {
             $.ajax({
-                url: 'deleteUser',
+                url: '/deleteFunction',
                 dataType: 'json',
                 type: 'POST',
                 headers: {

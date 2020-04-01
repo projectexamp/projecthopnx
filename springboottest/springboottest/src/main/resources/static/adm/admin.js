@@ -95,18 +95,13 @@ $(document).ready(function () {
             user = row;
             console.log(user)
 
-            $("#edit-name").val(user.name);
-            $("#edit-phone").val(user.phoneNumber);
-            $("#edit-addr").val(user.addr);
-            if (user.birthDate != null) {
-                var d = new Date(user.birthDate );
-                var day = ("0" + d.getDate()).slice(-2);
-                var month = ("0" + (d.getMonth() + 1)).slice(-2);
+            $("#edit-username").val(user.username);
+            $("#edit-fullname").val(user.fullname);
+            // user.birthDate = new Date($("#edit-birth").val());
+            $("#edit-gender").val(user.gender);
+            $("#edit-password").val(user.password);
+            $("#edit-status").val(user.status);
 
-                var date = d .getFullYear() + "-" + (month) + "-" + (day);
-                $("#edit-birth").val(date);
-
-            }
 
         },
         'click .remove': function (e, value, row, index) {
@@ -149,12 +144,13 @@ $(document).ready(function () {
                     title: 'gender',
                     sortable: true,
                     align: 'center'
-                }, {
-                    field: 'password',
-                    title: 'password',
-                    sortable: true,
-                    align: 'center'
                 },
+                //     {
+                //     field: 'password',
+                //     title: 'password',
+                //     sortable: true,
+                //     align: 'center'
+                // },
                     {
                         field: 'status',
                         title: 'status',
@@ -241,24 +237,36 @@ $(document).ready(function () {
     })
     $("#create").click(function () {
         user ={};
-        $("#edit-name").val("");
-        $("#edit-phone").val("");
-        $("#edit-birth").val("");
-        $("#edit-addr").val("");
+        $("#edit-username").val();
+        $("#edit-fullname").val();
+        // user.birthDate = new Date($("#edit-birth").val());
+        $("#edit-gender").val();
+        $("#edit-password").val();
+        $("#edit-status").val();
+
+
+
     })
 
     $("#btn-save").click(function () {
-        user.name =$("#edit-name").val();
-        user.phoneNumber = $("#edit-phone").val();
-        user.birthDate = new Date($("#edit-birth").val());
-        user.addr = $("#edit-addr").val();
+        user.username =$("#edit-username").val();
+        user.fullname = $("#edit-fullname").val();
+        // user.birthDate = new Date($("#edit-birth").val());
+        user.gender = $("#edit-gender").val();
+        user.password = $("#edit-password").val();
+        user.status = $("#edit-status").val();
 
-        if (user.name == null || user.name.trim() == "") {
+        if (user.username == null || user.username.trim() == "") {
             toastr["warning"]("Thông Báo ! Tên không được để trống");
-        } else if (user.phoneNumber == null) {
+        } else if (user.fullname == null) {
             toastr["warning"]("Thông Báo ! Số DT không được để trống");
-        } else if ( user.birthDate == null) {
+        } else if ( user.gender == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+        } else if ( user.password == null) {
+            toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+        } else if ( user.status == null) {
+            toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
+
         } else {
             $.ajax({
                 type: "POST",
