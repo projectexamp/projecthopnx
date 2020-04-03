@@ -1,7 +1,3 @@
-
-
-
-
 $(document).ready(function () {
 
     toastr.options = {
@@ -29,12 +25,11 @@ $(document).ready(function () {
     })
 
 
-
-
     var $table = $('#table')
     var $remove = $('#remove')
     var selections = []
     var listData = [];
+    var listFuncOfRole = [] ;
     var role = {};
     window.ajaxOptions = {
         beforeSend: function (xhr) {
@@ -45,12 +40,12 @@ $(document).ready(function () {
 
         return params
     }
+
     function getIdSelections() {
         return $.map($table.bootstrapTable('getSelections'), function (row) {
             return row.id
         })
     }
-
 
 
     function operateFormatter(value, row, index) {
@@ -90,6 +85,44 @@ $(document).ready(function () {
         ;
     }
 
+    $('.itemSearch').select2({
+        tags: true,
+        multiple: true,
+        tokenSeparators: [',', ' '],
+        // minimumInputLength: 2,
+        // minimumResultsForSearch: 10,
+        ajax: {
+            url: "/getFunctionListAll",
+            dataType: "json",
+            type: "GET",
+            headers: {
+                header, token
+            },
+            data: function (params) {
+
+                var queryParameters = {
+                    term: params.term
+                }
+                return queryParameters;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.functionName,
+                            id: item.id
+
+                        }
+                    })
+                };
+            }
+
+        }
+
+
+    });
+
+
     window.operateEvents = {
         'click .eye': function (e, value, row, index) {
             role = row;
@@ -101,7 +134,10 @@ $(document).ready(function () {
             $("#edit-description").val(role.description);
             $("#edit-roleCode").val(role.roleCode);
             $("#edit-roleOrder").val(role.roleOrder);
-
+            // $(".itemSearch").select2().val("2");
+            // $(".itemSearch").select2().;
+            // $('.itemSearch').select2().val("1").trigger('change') ;
+            // $(".itemSearch").select2('val', 1) ;
 
         },
         'click .remove': function (e, value, row, index) {
@@ -125,7 +161,7 @@ $(document).ready(function () {
                     sortable: true,
                 }, {
                     title: 'Thông tin',
-                    colspan: 6,
+                    colspan: 8,
                     align: 'center'
                 }], [{
                     field: 'roleOrder',
@@ -139,12 +175,15 @@ $(document).ready(function () {
                     sortable: true,
                     align: 'center',
                     // formatter: dateFormater,
-                }, {
+                },
+                    {
                     field: 'description',
                     title: 'description',
                     sortable: true,
-                    align: 'center'
-                }, {
+                    align: 'center',
+                    visible  : false
+                },
+                    {
                     field: 'roleCode',
                     title: 'roleCode',
                     sortable: true,
@@ -157,11 +196,18 @@ $(document).ready(function () {
                         align: 'center'
                     },
                     {
-                    title: 'Hành động',
-                    align: 'center',
-                    events: window.operateEvents,
-                    formatter: operateFormatter
-                }]
+                        field: 'funcStr',
+                        title: 'functions',
+                        sortable: true,
+                        align: 'center',
+                        // visible: false
+                    },
+                    {
+                        title: 'Hành động',
+                        align: 'center',
+                        events: window.operateEvents,
+                        formatter: operateFormatter
+                    }]
             ],
             data: listData
         })
@@ -235,7 +281,7 @@ $(document).ready(function () {
         getData();
     })
     $("#create").click(function () {
-        role ={};
+        role = {};
 
         $("#edit-status").val();
         $("#edit-roleName").val();
@@ -245,22 +291,28 @@ $(document).ready(function () {
     })
 
     $("#btn-save").click(function () {
-        role.status =$("#edit-status").val();
+        role.status = $("#edit-status").val();
         role.roleName = $("#edit-roleName").val();
         // role.birthDate = new Date($("#edit-birth").val());
         role.description = $("#edit-description").val();
         role.roleCode = $("#edit-roleCode").val();
         role.roleOrder = $("#edit-roleOrder").val();
+        // role.func = [];
+
+        var valu = $('.itemSearch').val() ;
+        role.func = valu;
+        console.log(valu) ;
+
 
         if (role.roleName == null || role.roleName.trim() == "") {
             toastr["warning"]("Thông Báo ! Tên không được để trống");
         } else if (role.status == null) {
             toastr["warning"]("Thông Báo ! Số DT không được để trống");
-        } else if ( role.description == null) {
+        } else if (role.description == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
-        }else if ( role.roleCode == null) {
+        } else if (role.roleCode == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
-        }else if ( role.roleOrder == null) {
+        } else if (role.roleOrder == null) {
             toastr["warning"]("Thông Báo ! Ngày sinh không được để trống");
 
 
@@ -273,7 +325,7 @@ $(document).ready(function () {
                 url: "/saveRole",
                 dataType: 'json',
                 cache: false,
-                data: JSON.stringify(role) ,
+                data: JSON.stringify(role),
                 timeout: 600000,
                 success: function (data) {
                     toastr["success"]("Thành Công ! </br>Cập nhật thành công");
@@ -289,7 +341,7 @@ $(document).ready(function () {
 
 
     $("#delete").click(function () {
-        var r = confirm("Bạn có chắc chắn muốn xóa  '" + role.roleName+ "'");
+        var r = confirm("Bạn có chắc chắn muốn xóa  '" + role.roleName + "'");
 
         if (r == true) {
             $.ajax({
@@ -320,6 +372,43 @@ $(document).ready(function () {
             console.log("cancel");
         }
     })
+
+
+    // function getFuncSelected() {
+    //     var search = {};
+    //     var roleName = $('#txtNameSearch').val();
+    //     var roleCode = $('#txtPhoneSearch').val();
+    //     if (roleName != null && roleName.trim().length > 0) {
+    //         search.roleName = roleName;
+    //     }
+    //     if (roleCode != null && roleCode.trim().length > 0) {
+    //         search.roleCode = roleCode;
+    //     }
+    //
+    //
+    //     $.ajax({
+    //         type: "POST",
+    //         contentType: "application/json", headers: {
+    //             header, token
+    //         },
+    //         url: "/getRoleList",
+    //         dataType: 'json',
+    //         cache: false,
+    //         data: JSON.stringify({
+    //             roleName: search.roleName,
+    //             roleCode: search.roleCode
+    //         }),
+    //         timeout: 600000,
+    //         success: function (data) {
+    //             listData = data;
+    //             initTable();
+    //         },
+    //         error: function (data) {
+    //             toastr["error"]("Thất Bại ! </br> Đã có lỗi xảy ra vui lòng thử lại sau");
+    //         }
+    //     });
+    //
+    // }
 
 
 

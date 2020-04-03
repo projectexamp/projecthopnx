@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class RoleController {
@@ -25,7 +26,18 @@ public class RoleController {
 
     @PostMapping("/getRoleList")
     public ResponseEntity<List<Role>> getRoleList(@RequestBody Role search) {
-        List roles = roleRepository.getListRole(search.getRoleName(), search.getRoleCode());
+        List<Role> roles = roleRepository.getListRole(search.getRoleName(), search.getRoleCode());
+        for(Role r  : roles){
+            String funcStr = "";
+            for(Function f : r.getFunctions()){
+                funcStr += f.getId() +",";
+            }
+            r.setFuncStr(funcStr);
+//            Set<Function> functions = r.getFunctions() ;
+//            for(Function f  : r.getFunctions()){
+//                funcStr +=
+//            }
+        }
         return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
 
     }

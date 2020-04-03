@@ -1,7 +1,9 @@
 package com.example.springboottest.model.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tbl_role", schema = "small_project_aht", catalog = "")
@@ -32,6 +34,24 @@ public class Role {
     @Column(name = "ROLE_ORDER")
     private Long roleOrder;
 
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tbl_role_function", joinColumns = @JoinColumn(name = "ROLE_ID"), inverseJoinColumns = @JoinColumn(name = "FUNCTION_ID"))
+    private Set<Function> functions;
+
+    @Transient
+    private String[] func ;
+
+    @Transient
+    private String funcStr ;
+
+    public String getFuncStr() {
+        return funcStr;
+    }
+
+    public void setFuncStr(String funcStr) {
+        this.funcStr = funcStr;
+    }
 
     public Long getId() {
         return id;
@@ -79,6 +99,22 @@ public class Role {
 
     public void setRoleOrder(Long roleOrder) {
         this.roleOrder = roleOrder;
+    }
+
+    public Set<Function> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(Set<Function> functions) {
+        this.functions = functions;
+    }
+
+    public String[] getFunc() {
+        return func;
+    }
+
+    public void setFunc(String[] func) {
+        this.func = func;
     }
 
     @Override

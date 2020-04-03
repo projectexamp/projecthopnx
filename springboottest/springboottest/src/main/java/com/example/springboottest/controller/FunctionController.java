@@ -7,6 +7,7 @@ import com.example.springboottest.model.service.serviceImp.FunctionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,13 @@ public class FunctionController {
     @PostMapping("/getFunctionList")
     public ResponseEntity<List<Function>> getFunctionList(@RequestBody Function search) {
         List functions = functionRepository.getListFunction(search.getFunctionName(), search.getFunctionCode());
+        return new ResponseEntity<List<Function>>(functions, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/getFunctionListAll")
+    public ResponseEntity<List<Function>> getFunctionListAll() {
+        List functions = functionRepository.getListFunctionAll();
         return new ResponseEntity<List<Function>>(functions, HttpStatus.OK);
 
     }

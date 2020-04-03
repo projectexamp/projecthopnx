@@ -25,6 +25,7 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
     <link href="/adm/main.css" rel="stylesheet">
 </head>
 <link rel="stylesheet" href="/select-search/select2.min.css">
@@ -559,18 +560,7 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="mb-3">
-                            <div class="single-upload ">
-                                <form class="float-left mr-3" id="singleUploadForm2" name="singleUploadForm2">
-                                    <input type="file" name="file" class="file-input" required/>
-                                </form>
-                                <div class="upload-response float-left">
-                                    <div id="singleFileUploadError2"></div>
-                                    <div id="singleFileUploadSuccess2"></div>
-                                </div>
-                                <button id="uploadBtn" type="submit" class="btn btn-primary submit-btn">Import</button>
-                            </div>
-                        </div>
+
                         <button type="button" class="btn btn-primary" id="create" data-toggle="modal"
                                 data-target="#roleModal">Thêm mới
                         </button>
@@ -657,11 +647,11 @@
 <script src="/js/bootstrap-table-locale-all.min.js"></script>
 <script src="/js/bootstrap-table-export.min.js"></script>
 <script src="/select-search/select2.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="/adm/rolemanager.js"></script>
 </body>
 
-</html>
+
 
 <div class="modal fade" id="roleModal" role="dialog">
     <div class="modal-dialog" style="max-width: 1000px;width: auto">
@@ -710,6 +700,15 @@
                                             <input id="edit-roleOrder" class="form-control" >
                                         </p>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <select class='form-control col-lg-5 itemSearch' type='text' placeholder='select item'>
+
+                                        </select>
+
+<!--                                        <input class='form-control col-lg-5 itemSearch' type='text' placeholder='select item' />-->
+<!---->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -725,3 +724,4 @@
         </div>
     </div>
 </div>
+</html>

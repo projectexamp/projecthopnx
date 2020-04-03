@@ -4,6 +4,7 @@ package com.example.springboottest.controller;
 
 import org.springframework.stereotype.Controller;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -31,7 +32,10 @@ public class MainController {
     }
 
     @GetMapping("/admin/function-manager")
-    public String managerFunction(){
+    public String managerFunction(Model model){
+//        model.getAttribute();
+
+
         return  "admin/functionmanager" ;
     }
 
