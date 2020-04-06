@@ -1,6 +1,7 @@
 package com.example.springboottest.controller;
 
 import com.example.springboottest.model.entity.Function;
+import com.example.springboottest.model.entity.RoleFunction;
 import com.example.springboottest.model.entity.User;
 import com.example.springboottest.model.repository.FunctionRepository;
 import com.example.springboottest.model.service.serviceImp.FunctionServiceImpl;
@@ -34,6 +35,13 @@ public class FunctionController {
     @GetMapping("/getFunctionListAll")
     public ResponseEntity<List<Function>> getFunctionListAll() {
         List functions = functionRepository.getListFunctionAll();
+        return new ResponseEntity<List<Function>>(functions, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/getFunctionActiveByRole")
+    public ResponseEntity<List<Function>> getFunctionActiveByRole(@RequestBody RoleFunction search ) {
+        List functions = functionRepository.getListFunctionActiveByRole(search.getRoleId());
         return new ResponseEntity<List<Function>>(functions, HttpStatus.OK);
 
     }

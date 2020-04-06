@@ -106,6 +106,8 @@ $(document).ready(function () {
                 return queryParameters;
             },
             processResults: function (data) {
+                // listFuncOfRole = data ;
+                // console.log('test :'+ listFuncOfRole) ;
                 return {
                     results: $.map(data, function (item) {
                         return {
@@ -119,9 +121,46 @@ $(document).ready(function () {
 
         }
 
-
     });
 
+    function getFuncByRole(row) {
+        var search = {};
+        var roleId = row.id;
+        search.roleId = roleId ;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json", headers: {
+                header, token
+            },
+            url: "/getFunctionActiveByRole",
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            data: JSON.stringify({
+                roleId: search.roleId
+            }),
+            success: function (data) {
+                listFuncOfRole = data;
+                console.log('test data :  ' + data) ;
+                var newOption = null ;
+                for (var i =0  ; i< data.length ; i++  ){
+                    newOption = new Option(data[i].functionName, data[i].id, false, true);
+                                        console.log('chung toi la2 : ' + data[i].functionName  + ':' +  data[i].id) ;
+                                        $('.itemSearch').append(newOption).trigger('change');
+                }
+                // listFuncOfRole = data.functions;
+                // initTable();
+            },
+            error: function (data) {
+                toastr["error"]("Thất Bại ! </br> Đã có lỗi xảy ra vui lòng thử lại sau");
+            }
+        });
+
+    }
+
+    $("#closeModal").click(function () {
+        $('.itemSearch').val(null).trigger('change');
+    })
 
     window.operateEvents = {
         'click .eye': function (e, value, row, index) {
@@ -134,10 +173,12 @@ $(document).ready(function () {
             $("#edit-description").val(role.description);
             $("#edit-roleCode").val(role.roleCode);
             $("#edit-roleOrder").val(role.roleOrder);
-            // $(".itemSearch").select2().val("2");
-            // $(".itemSearch").select2().;
-            // $('.itemSearch').select2().val("1").trigger('change') ;
-            // $(".itemSearch").select2('val', 1) ;
+
+            getFuncByRole(row);
+
+            console.log(listData) ;
+
+
 
         },
         'click .remove': function (e, value, row, index) {
@@ -200,7 +241,7 @@ $(document).ready(function () {
                         title: 'functions',
                         sortable: true,
                         align: 'center',
-                        // visible: false
+                        visible: false
                     },
                     {
                         title: 'Hành động',
@@ -268,6 +309,8 @@ $(document).ready(function () {
             timeout: 600000,
             success: function (data) {
                 listData = data;
+                console.log('mmmm : ' +  data) ;
+                // listFuncOfRole = data.functions;
                 initTable();
             },
             error: function (data) {

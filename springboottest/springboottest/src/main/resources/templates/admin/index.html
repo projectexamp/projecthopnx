@@ -25,7 +25,7 @@
     =========================================================
     * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet"/>
     <link href="/adm/main.css" rel="stylesheet">
 </head>
 <link rel="stylesheet" href="/select-search/select2.min.css">
@@ -505,29 +505,42 @@
             </div>
             <div class="scrollbar-sidebar">
                 <div class="app-sidebar__inner">
-                    <ul class="vertical-nav-menu">
-                        <li class="app-sidebar__heading">Dashboards</li>
+                    <ul class="vertical-nav-menu" th:each="func : ${listFunc}">
+                        <!--                        <li class="app-sidebar__heading">Dashboards</li>-->
+
+
+<!--                        <li class="list-group-item" th:text="${func.petName}">-->
+
+<!--                        </li>-->
+
                         <li>
-                            <a href="/admin" class="mm-active">
-                                <i class="metismenu-icon pe-7s-rocket"></i>
-                                Trang Quản Trị
+                            <a th:href="@{'/admin/' + ${func.functionUrl}}" class="mm-active" >
+                                <i class="metismenu-icon pe-7s-rocket" ></i>
+                                <p th:text="${func.functionName}" ></p>
                             </a>
                         </li>
 
+<!--                        <li>-->
+<!--                            <a href="/admin" class="mm-active">-->
+<!--                                <i class="metismenu-icon pe-7s-rocket"></i>-->
+<!--                                Trang Quản Trị-->
+<!--                            </a>-->
+<!--                        </li>-->
 
-                        <li>
-                            <a href="/admin/function-manager">
-                                <i class="metismenu-icon pe-7s-diamond"></i>
-                                Quản lý chức năng
-                            </a>
-                        </li>
 
-                        <li>
-                            <a href="/admin/role-manager">
-                                <i class="metismenu-icon pe-7s-diamond"></i>
-                                Quản lý vai trò
-                            </a>
-                        </li>
+<!--                        <li>-->
+<!--                            <a href="/admin/function-manager">-->
+<!--                                <i class="metismenu-icon pe-7s-diamond"></i>-->
+<!--                                Quản lý chức năng-->
+<!--                            </a>-->
+<!--                        </li>-->
+
+<!--                        <li>-->
+<!--                            <a href="/admin/role-manager">-->
+<!--                                <i class="metismenu-icon pe-7s-diamond"></i>-->
+<!--                                Quản lý vai trò-->
+<!--                            </a>-->
+<!--                        </li>-->
 
                     </ul>
                 </div>
@@ -700,6 +713,16 @@
                                             <input id="edit-status" class="form-control">
                                         </p>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <select class='form-control col-lg-5 itemSearch' type='text'
+                                                placeholder='select item'>
+
+                                        </select>
+
+                                        <!--                                        <input class='form-control col-lg-5 itemSearch' type='text' placeholder='select item' />-->
+                                        <!---->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -708,7 +731,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="btn-save">Lưu</button>
                     <button type="button" class="btn btn-danger" id="delete" data-dismiss="modal">Xóa</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" id="closeModal" data-dismiss="modal">Close</button>
                 </div>
             </div>
 

@@ -1,8 +1,13 @@
 package com.example.springboottest.controller;
 
+import com.example.springboottest.model.entity.RoleFunction;
+import com.example.springboottest.model.entity.RoleUser;
 import com.example.springboottest.model.entity.Student;
 import com.example.springboottest.model.entity.User;
+import com.example.springboottest.model.repository.RoleRepository;
+import com.example.springboottest.model.repository.RoleUserRepository;
 import com.example.springboottest.model.repository.UserRepository;
+import com.example.springboottest.model.service.RoleUserService;
 import com.example.springboottest.model.service.serviceImp.UserServiceImpl;
 import com.example.springboottest.viewmodel.StudentCsvModel;
 import com.opencsv.bean.CsvToBean;
@@ -15,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,6 +42,13 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleUserRepository roleUserRepository ;
+    @Autowired
+    private RoleUserService roleUserService ;
+
+    @Autowired
+    private RoleRepository roleRepository ;
 
 
     @PostMapping("/getUserList")
@@ -43,9 +57,58 @@ public class UserController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 
     }
-    
+
+    @Transactional
     @PostMapping("/saveUser")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
+        String[] listRoleInputStr  = user.getRole() ;
+        List<Long> listRoleInput = new ArrayList<>();
+//        HashMap<Long,Long> MapRoleIdInput = new HashMap<>() ;
+//        HashMap<Long,Long> MapRoleIdDb = new HashMap<>() ;
+//        List<RoleUser> listRoleUserDb = roleUserRepository.findRoleUserActiveByUserId(user.getId()) ;
+//
+//        List<Long> listRoleIdInActive = new ArrayList<>();
+//        List<Long> listRoleIdActive  = new ArrayList<>() ;
+//        List<RoleUser> listRoleUserActive =new ArrayList<>();
+
+        //convert to ArrayList
+        for (int i =0 ; i < listRoleInputStr.length ; i++ ){
+            listRoleInput.add(Long.parseLong(listRoleInputStr[i])) ;
+        }
+
+        //convert to hashmap
+//        for (int i =0 ; i < listRoleInputStr.length ; i++ ){
+//            MapRoleIdInput.put(Long.parseLong(listRoleInputStr[i]),Long.parseLong(listRoleInputStr[i])) ;
+//        }
+//        for ( RoleUser ru  : listRoleUserDb ){
+//            MapRoleIdDb.put(ru.getRoleId(),ru.getRoleId()) ;
+//        }
+//
+//        //add list InActive
+//        for (RoleUser ru : listRoleUserDb) {
+//            if (MapRoleIdInput.get(ru.getRoleId()) != null ){
+//                continue;
+//            }else {
+//                listRoleIdInActive.add(ru.getRoleId()) ;
+//            }
+//        }
+//
+//        //add list Active
+//        for(Long i : listRoleInput ){
+//            if (MapRoleIdDb.get(i) != null ){
+//                continue;
+//            }else {
+//                listRoleIdActive.add(MapRoleIdInput.get(i)) ;
+//            }
+//        }
+//
+//        for (Long l  : listRoleIdInActive){
+//            System.out.println("id inActive : " + l);
+//        }
+//        System.out.println("danh sach inActive " +  listRoleIdInActive);
+//        System.out.println("danh sach active " +  listRoleIdActive);
+
+        user.setRoles(roleRepository.finByRoleId(listRoleInput));
         User st = userService.save(user);
         return new ResponseEntity<User>(st, HttpStatus.OK);
     }

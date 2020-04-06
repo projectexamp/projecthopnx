@@ -17,9 +17,21 @@ public class RoleFunction {
     private Long roleId;
 
     @Basic
+    @Column(name = "FUNCTION_ID")
+    private Long functionId;
+
+
+    @Basic
     @Column(name = "IS_ACTIVE")
     private Long isActive;
 
+    public Long getFunctionId() {
+        return functionId;
+    }
+
+    public void setFunctionId(Long functionId) {
+        this.functionId = functionId;
+    }
 
     public Long getId() {
         return id;

@@ -2,15 +2,25 @@ package com.example.springboottest.controller;
 
 import com.example.springboottest.model.entity.Function;
 import com.example.springboottest.model.entity.Role;
+import com.example.springboottest.model.entity.RoleFunction;
+import com.example.springboottest.model.entity.RoleUser;
+import com.example.springboottest.model.repository.FunctionRepository;
+import com.example.springboottest.model.repository.RoleFunctionRepository;
 import com.example.springboottest.model.repository.RoleRepository;
+import com.example.springboottest.model.service.RoleService;
+import com.example.springboottest.model.service.serviceImp.RoleFunctionServiceImpl;
 import com.example.springboottest.model.service.serviceImp.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +32,14 @@ public class RoleController {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private RoleFunctionRepository roleFunctionRepository ;
+
+    @Autowired
+    private RoleFunctionServiceImpl roleFunctionService ;
+
+    @Autowired
+    private FunctionRepository functionRepository ;
 
 
     @PostMapping("/getRoleList")
@@ -41,10 +59,95 @@ public class RoleController {
         return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
 
     }
-    
+
+    @PostMapping("/getRoleActiveByUser")
+    public ResponseEntity<List<Role>> getFunctionActiveByRole(@RequestBody RoleUser search ) {
+        List roles = roleRepository.getListRoleActiveByUser(search.getUserId());
+        return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
+
+    }
+
+
+    @GetMapping("/getRoleListAll")
+    public ResponseEntity<List<Role>> getFunctionListAll() {
+        List roles = roleRepository.getListRoleAll();
+        return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
+
+    }
+
+
+    @Transactional
     @PostMapping("/saveRole")
     public ResponseEntity<Role> saveRole(@RequestBody Role role) {
+        String[] listFuncInputStr  = role.getFunc() ;
+        List<Long> listFuncInput = new ArrayList<>();
+//        HashMap<Long,Long> MapFuncIdInput = new HashMap<>() ;
+//        HashMap<Long,Long> MapFuncIdDb = new HashMap<>() ;
+//        List<RoleFunction> listRoleFuncDb = roleFunctionRepository.findRoleFunctionByRoleId(role.getId()) ;
+//
+//        List<Long> listFuncIdInActive = new ArrayList<>();
+//        List<Long> listFuncIdActive  = new ArrayList<>() ;
+//        List<RoleFunction> listRoleFunctionActive =new ArrayList<>();
+
+        //convert to ArrayList
+        for (int i =0 ; i < listFuncInputStr.length ; i++ ){
+            listFuncInput.add(Long.parseLong(listFuncInputStr[i])) ;
+        }
+
+//        //convert to hashmap
+//        for (int i =0 ; i < listFuncInputStr.length ; i++ ){
+//            MapFuncIdInput.put(Long.parseLong(listFuncInputStr[i]),Long.parseLong(listFuncInputStr[i])) ;
+//        }
+//        for ( RoleFunction rf  : listRoleFuncDb ){
+//            MapFuncIdDb.put(rf.getFunctionId(),rf.getFunctionId()) ;
+//        }
+//
+//        //add list InActive
+//        for (RoleFunction rf : listRoleFuncDb) {
+//            if (MapFuncIdInput.get(rf.getFunctionId()) != null ){
+//                continue;
+//            }else {
+//                listFuncIdInActive.add(rf.getFunctionId()) ;
+//            }
+//        }
+//
+//        //add list Active
+//        for(Long i : listFuncInput ){
+//            if (MapFuncIdDb.get(i) != null ){
+//                continue;
+//            }else {
+//                listFuncIdActive.add(MapFuncIdInput.get(i)) ;
+//            }
+//        }
+//
+//        for (Long l  : listFuncIdInActive){
+//            System.out.println("id inActive : " + l);
+//        }
+//        System.out.println("danh sach inActive " +  listFuncIdInActive);
+//        System.out.println("danh sach active " +  listFuncIdActive);
+//
+//        if(listFuncIdActive.size()!=0 ){
+//            RoleFunction roleFunction = null ;
+//            for(Long i : listFuncIdActive ){
+//                roleFunction = new RoleFunction() ;
+//                roleFunction.setFunctionId(i);
+//                roleFunction.setIsActive((long) 0);
+//                roleFunction.setRoleId(role.getId());
+//                roleFunctionService.save(roleFunction) ;
+//            }
+//
+//        }
+//
+//        if(listFuncIdInActive.size() > 0 ){
+//            roleFunctionRepository.InActiveRoleFunction(role.getId(),listFuncIdInActive);
+//        }
+//        MapFuncIdInput.get
+//        System.out.println(listRoleFunc.contains(1));
+
+
+        role.setFunctions(functionRepository.finByFuncId(listFuncInput));
         Role r = roleService.save(role);
+
         return new ResponseEntity<Role>(r, HttpStatus.OK);
     }
     

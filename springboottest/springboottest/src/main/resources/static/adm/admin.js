@@ -90,6 +90,83 @@ $(document).ready(function () {
         ;
     }
 
+    $('.itemSearch').select2({
+        tags: true,
+        multiple: true,
+        tokenSeparators: [',', ' '],
+        // minimumInputLength: 2,
+        // minimumResultsForSearch: 10,
+        ajax: {
+            url: "/getRoleListAll",
+            dataType: "json",
+            type: "GET",
+            headers: {
+                header, token
+            },
+            data: function (params) {
+
+                var queryParameters = {
+                    term: params.term
+                }
+                return queryParameters;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.roleName,
+                            id: item.id
+
+                        }
+                    })
+                };
+            }
+
+        }
+
+
+    });
+
+
+    function getRoleByUser(row) {
+        var search = {};
+        var userId = row.id;
+        search.userId = userId ;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json", headers: {
+                header, token
+            },
+            url: "/getRoleActiveByUser",
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            data: JSON.stringify({
+                userId: search.userId
+            }),
+            success: function (data) {
+                // listFuncOfRole = data;
+                // console.log('test data :  ' + data) ;
+                var newOption = null ;
+                for (var i =0  ; i< data.length ; i++  ){
+                    newOption = new Option(data[i].roleName, data[i].id, false, true);
+                    console.log('chung toi la2 : ' + data[i].roleName  + ':' +  data[i].id) ;
+                    $('.itemSearch').append(newOption).trigger('change');
+                }
+                // listFuncOfRole = data.functions;
+                // initTable();
+            },
+            error: function (data) {
+                toastr["error"]("Thất Bại ! </br> Đã có lỗi xảy ra vui lòng thử lại sau");
+            }
+        });
+
+    }
+
+    $("#closeModal").click(function () {
+        $('.itemSearch').val(null).trigger('change');
+    })
+
     window.operateEvents = {
         'click .eye': function (e, value, row, index) {
             user = row;
@@ -102,6 +179,7 @@ $(document).ready(function () {
             $("#edit-password").val(user.password);
             $("#edit-status").val(user.status);
 
+            getRoleByUser(row);
 
         },
         'click .remove': function (e, value, row, index) {
@@ -256,6 +334,10 @@ $(document).ready(function () {
         user.password = $("#edit-password").val();
         user.status = $("#edit-status").val();
 
+        var valu = $('.itemSearch').val() ;
+        user.role = valu;
+        console.log(valu) ;
+
         if (user.username == null || user.username.trim() == "") {
             toastr["warning"]("Thông Báo ! Tên không được để trống");
         } else if (user.fullname == null) {
@@ -324,45 +406,6 @@ $(document).ready(function () {
         }
     })
 
-    $("#uploadBtn").click(function (event) {
 
-        // Stop default form Submit.
-        event.preventDefault();
-
-        // Get form
-        var form = $('#singleUploadForm2')[0];
-
-        var data = new FormData(form);
-
-        // Call Ajax Submit.
-        ajaxSubmitForm(data, "/upload-csv-file");
-    });
-
-    function ajaxSubmitForm(data, url) {
-
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            headers: {
-                header, token
-            },
-            url: url,
-            data: data,
-
-            // prevent jQuery from automatically transforming the data into a query string
-            processData: false,
-            contentType: false,
-            cache: false,
-            timeout: 1000000,
-            success: function (data) {
-                toastr["success"]("Thành Công ! Import thành công");
-                getData();
-
-            },
-            error: function (jqXHR) {
-                toastr["error"]("Thất Bại ! Đã có lỗi xảy ra vui lòng thử lại sau");
-            }
-        });
-    }
 
 })
