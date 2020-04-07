@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value =  "from User s where (:username is null or s.username like %:username%) and (:fullname is null or s.fullname like %:fullname%) and s.status <> 2 ")
     List<User> getListUser(@Param("username") String username  , @Param("fullname") String fullname );
+
+    @Query(value = "from User u where u.status <> 2 and lower(u.email )=lower(:email) ")
+    User findByEmailIdIgnoreCase(@Param("email") String email);
 }

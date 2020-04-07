@@ -29,6 +29,9 @@ public class User {
 	@Column(name = "STATUS")
 	private Long status;
 
+	@Column(name = "EMAIL")
+	private String email;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_role_user", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
 	private Set<Role> roles;
@@ -37,6 +40,14 @@ public class User {
 	@Transient
 	private String[] role ;
 
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public String[] getRole() {
 		return role;

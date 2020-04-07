@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +51,9 @@ public class UserController {
     @Autowired
     private RoleRepository roleRepository ;
 
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder ;
 
     @PostMapping("/getUserList")
     public ResponseEntity<List<User>> getUserList(@RequestBody User search) {
@@ -108,6 +112,8 @@ public class UserController {
 //        System.out.println("danh sach inActive " +  listRoleIdInActive);
 //        System.out.println("danh sach active " +  listRoleIdActive);
 
+        String passEncode  =  bCryptPasswordEncoder.encode(user.getPassword().trim()) ;
+        user.setPassword(passEncode);
         user.setRoles(roleRepository.finByRoleId(listRoleInput));
         User st = userService.save(user);
         return new ResponseEntity<User>(st, HttpStatus.OK);

@@ -176,8 +176,10 @@ $(document).ready(function () {
             $("#edit-fullname").val(user.fullname);
             // user.birthDate = new Date($("#edit-birth").val());
             $("#edit-gender").val(user.gender);
-            $("#edit-password").val(user.password);
+            // $("#edit-password").val(user.password);
             $("#edit-status").val(user.status);
+            $("#edit-email").val(user.email);
+
 
             getRoleByUser(row);
 
@@ -232,6 +234,12 @@ $(document).ready(function () {
                     {
                         field: 'status',
                         title: 'status',
+                        sortable: true,
+                        align: 'center'
+                    },
+                    {
+                        field: 'email',
+                        title: 'email',
                         sortable: true,
                         align: 'center'
                     },
@@ -321,7 +329,7 @@ $(document).ready(function () {
         $("#edit-gender").val();
         $("#edit-password").val();
         $("#edit-status").val();
-
+        $("#edit-email").val();
 
 
     })
@@ -333,6 +341,7 @@ $(document).ready(function () {
         user.gender = $("#edit-gender").val();
         user.password = $("#edit-password").val();
         user.status = $("#edit-status").val();
+        user.email = $("#edit-email").val();
 
         var valu = $('.itemSearch').val() ;
         user.role = valu;

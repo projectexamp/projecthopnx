@@ -16,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -48,7 +49,7 @@ public class MainController {
                 userRepository.findByUsername(CurrentUserName).orElseThrow(() -> new UsernameNotFoundException("No existe user_id on tbl_role_user"));
 
         Long userId = appUser.getId() ;
-        List<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
+        Set<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
 
         model.addAttribute("listFunc" ,listFunc) ;
         return  "admin/index" ;
@@ -63,7 +64,7 @@ public class MainController {
                 userRepository.findByUsername(CurrentUserName).orElseThrow(() -> new UsernameNotFoundException("No existe user_id on tbl_role_user"));
 
         Long userId = appUser.getId() ;
-        List<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
+        Set<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
 
         model.addAttribute("listFunc" ,listFunc) ;
 
@@ -79,7 +80,7 @@ public class MainController {
                 userRepository.findByUsername(CurrentUserName).orElseThrow(() -> new UsernameNotFoundException("No existe user_id on tbl_role_user"));
 
         Long userId = appUser.getId() ;
-        List<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
+        Set<Function> listFunc = functionRepository.getListFuncbyUserId(userId);
 
         model.addAttribute("listFunc" ,listFunc) ;
         return  "admin/rolemanager" ;

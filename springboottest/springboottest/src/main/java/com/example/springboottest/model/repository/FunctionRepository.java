@@ -30,7 +30,7 @@ public interface FunctionRepository extends JpaRepository<Function, Long> {
 
     @Query(value = "from Function f inner join RoleFunction rf on f.id = rf.functionId " +
             "inner join RoleUser ru on ru.roleId = rf.roleId where  ru.userId =:userId ")
-    List<Function> getListFuncbyUserId(@Param("userId") Long userId);
+    Set<Function> getListFuncbyUserId(@Param("userId") Long userId);
 
 
 }
