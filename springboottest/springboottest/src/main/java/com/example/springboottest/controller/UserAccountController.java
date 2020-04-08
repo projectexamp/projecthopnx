@@ -63,7 +63,7 @@ public class UserAccountController {
 			
 			emailSenderService.sendEmail(mailMessage);
 			
-			modelAndView.addObject("emailId", user.getEmail());
+			modelAndView.addObject("email", user.getEmail());
 			
 			modelAndView.setViewName("successfulRegisteration");
 		}
@@ -78,7 +78,7 @@ public class UserAccountController {
 		
 		if(token != null)
 		{
-			User user = userRepository.findByEmailIdIgnoreCase(token.getUser().getEmail());
+			User user = userRepository.findById(token.getUserId()).get();
 			user.setStatus((long) 0);
 			userRepository.save(user);
 			modelAndView.setViewName("accountVerified");
@@ -152,9 +152,9 @@ public class UserAccountController {
 			SimpleMailMessage mailMessage = new SimpleMailMessage();
 			mailMessage.setTo(existingUser.getEmail());
 			mailMessage.setSubject("Complete Password Reset!");
-			mailMessage.setFrom("nairobley@gmail.com");
+			mailMessage.setFrom("nghiemxuanhop98@gmail.com");
 			mailMessage.setText("To complete the password reset process, please click here: "
-			+"http://localhost:8082/confirm-reset?token="+confirmationToken.getConfirmationToken());
+			+"http://localhost:8403/confirm-reset?token="+confirmationToken.getConfirmationToken());
 			
 			emailSenderService.sendEmail(mailMessage);
 
@@ -176,11 +176,12 @@ public class UserAccountController {
 		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
 		
 		if(token != null) {
-			User user = userRepository.findByEmailIdIgnoreCase(token.getUser().getEmail());
+
+			User user = userRepository.findById(token.getUserId()).get();
 			user.setStatus((long) 0);
 			userRepository.save(user);
 			modelAndView.addObject("user", user);
-			modelAndView.addObject("emailId", user.getEmail());
+			modelAndView.addObject("email", user.getEmail());
 			modelAndView.setViewName("resetPassword");
 		} else {
 			modelAndView.addObject("message", "The link is invalid or broken!");
