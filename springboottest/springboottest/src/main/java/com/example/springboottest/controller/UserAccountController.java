@@ -2,18 +2,23 @@ package com.example.springboottest.controller;
 
 
 import com.example.springboottest.model.entity.ConfirmationToken;
+import com.example.springboottest.model.entity.Role;
 import com.example.springboottest.model.entity.User;
 import com.example.springboottest.model.repository.ConfirmationTokenRepository;
+import com.example.springboottest.model.repository.RoleRepository;
 import com.example.springboottest.model.repository.UserRepository;
 import com.example.springboottest.model.service.serviceImp.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Set;
 
 @Controller
 public class UserAccountController {
@@ -31,45 +36,7 @@ public class UserAccountController {
 	// to encode our password
 	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-	// Registration
-	@RequestMapping(value="/register", method= RequestMethod.GET)
-	public ModelAndView displayRegistration(ModelAndView modelAndView, User user) {
-		modelAndView.addObject("user", user);
-		modelAndView.setViewName("register");
-		return modelAndView;
-	}
-	
-	@RequestMapping(value="/register", method= RequestMethod.POST)
-	public ModelAndView registerUser(ModelAndView modelAndView, User user) {
-		
-		User existingUser = userRepository.findByEmailIdIgnoreCase(user.getEmail());
-		if(existingUser != null) {
-			modelAndView.addObject("message","This email already exists!");
-			modelAndView.setViewName("error");
-		} else {
-			user.setPassword(encoder.encode(user.getPassword()));
-			userRepository.save(user);
-			
-			ConfirmationToken confirmationToken = new ConfirmationToken(user);
-			
-			confirmationTokenRepository.save(confirmationToken);
-			
-			SimpleMailMessage mailMessage = new SimpleMailMessage();
-			mailMessage.setTo(user.getEmail());
-			mailMessage.setSubject("Complete Registration!");
-			mailMessage.setFrom("nghiemxuanhop98@gmail.com");
-			mailMessage.setText("To confirm your account, please click here : "
-			+"http://localhost:8403/confirm-account?token="+confirmationToken.getConfirmationToken());
-			
-			emailSenderService.sendEmail(mailMessage);
-			
-			modelAndView.addObject("email", user.getEmail());
-			
-			modelAndView.setViewName("successfulRegisteration");
-		}
-		
-		return modelAndView;
-	}
+
 
 	// Confirm registration
 	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
@@ -92,39 +59,7 @@ public class UserAccountController {
 		return modelAndView;
 	}	
 
-	// Login
-//	@RequestMapping(value="/login", method= RequestMethod.GET)
-//	public ModelAndView displayLogin(ModelAndView modelAndView, User user) {
-//		modelAndView.addObject("user", user);
-//		modelAndView.setViewName("login");
-//		return modelAndView;
-//	}
 
-//	@RequestMapping(value="/login", method= RequestMethod.POST)
-//	public ModelAndView loginUser(ModelAndView modelAndView, User user) {
-//
-//		User existingUser = userRepository.findByEmailIdIgnoreCase(user.getEmailId());
-//		if(existingUser != null) {
-//			// use encoder.matches to compare raw password with encrypted password
-//
-//			if (encoder.matches(user.getPassword(), existingUser.getPassword())){
-//				// successfully logged in
-//				modelAndView.addObject("message", "Successfully logged in!");
-//				modelAndView.setViewName("successLogin");
-//			} else {
-//				// wrong password
-//				modelAndView.addObject("message", "Incorrect password. Try again.");
-//				modelAndView.setViewName("login");
-//			}
-//		} else {
-//			modelAndView.addObject("message", "The email provided does not exist!");
-//			modelAndView.setViewName("login");
-//
-//		}
-//
-//		return modelAndView;
-//	}
-	
 	/**
 	 * Display the forgot password page and form
 	 */
@@ -214,6 +149,51 @@ public class UserAccountController {
 		
 		return modelAndView;
 	}
+
+    // Registration
+    @RequestMapping(value="/register", method= RequestMethod.GET)
+    public ModelAndView displayRegistration(ModelAndView modelAndView, User user) {
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("register");
+        return modelAndView;
+    }
+
+    @Autowired
+    private RoleRepository roleRepository ;
+
+	@Transactional
+    @RequestMapping(value="/register", method= RequestMethod.POST)
+    public ModelAndView registerUser(ModelAndView modelAndView, User user) {
+        Set<Role> role = roleRepository.findByRoleName("ROLE_USER") ;
+        User existingUser = userRepository.findByEmailIdIgnoreCase(user.getEmail());
+        if(existingUser != null) {
+            modelAndView.addObject("message","This email already exists!");
+            modelAndView.setViewName("error");
+        } else {
+            user.setRoles(role);
+            user.setPassword(encoder.encode(user.getPassword()));
+            userRepository.save(user);
+
+            ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+            confirmationTokenRepository.save(confirmationToken);
+
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(user.getEmail());
+            mailMessage.setSubject("Complete Registration!");
+            mailMessage.setFrom("nghiemxuanhop98@gmail.com");
+            mailMessage.setText("To confirm your account, please click here : "
+                    +"http://localhost:8403/confirm-account?token="+confirmationToken.getConfirmationToken());
+
+            emailSenderService.sendEmail(mailMessage);
+
+            modelAndView.addObject("email", user.getEmail());
+
+            modelAndView.setViewName("successfulRegisteration");
+        }
+
+        return modelAndView;
+    }
 
 
 	public UserRepository getUserRepository() {

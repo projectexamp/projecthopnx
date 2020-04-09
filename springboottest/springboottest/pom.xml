@@ -69,7 +69,16 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-<!--		csv-->
+<!--		common-codec-->
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+
+
+		<!--		csv-->
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>

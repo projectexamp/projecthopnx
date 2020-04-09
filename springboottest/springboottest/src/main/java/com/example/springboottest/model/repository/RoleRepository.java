@@ -28,4 +28,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query(value =  "from Role s where  s.status <> 2 and s.id in :roleList")
     Set<Role> finByRoleId(@Param("roleList") List<Long> roleList);
 
+    @Query(value =  "from Role s where  s.status <> 2 and s.roleName =:roleName")
+    Set<Role> findByRoleName(@Param("roleName") String roleName );
+
 }
