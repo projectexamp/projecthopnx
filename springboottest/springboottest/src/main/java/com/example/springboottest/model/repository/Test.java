@@ -3,6 +3,7 @@ package com.example.springboottest.model.repository;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 
 public class Test {
@@ -15,16 +16,24 @@ public class Test {
         PrivateKey privateKey = (PrivateKey) keys.get("private");
         PublicKey publicKey = (PublicKey) keys.get("public");
 
+
         String encryptedText = encryptMessage(plainText, privateKey);
         String descryptedText = decryptMessage(encryptedText, publicKey);
 
-        System.out.println("private key : "+ keys.get("private"));
         System.out.println("public key : "+ keys.get("public"));
         System.out.println("input:" + plainText);
         System.out.println("encrypted:" + encryptedText);
         System.out.println("decrypted:" + descryptedText);
 
+        byte[] keyBytes = Base64.getDecoder().decode(publicKey.toString().getBytes("utf-8"));
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PublicKey key = keyFactory.generatePublic(spec);
+        System.out.println("key : "  + key);
+
     }
+
+
 
     // Get RSA keys. Uses key size of 2048.
     private static Map<String, Object> getRSAKeys() throws Exception {

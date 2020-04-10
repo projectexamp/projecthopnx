@@ -36,6 +36,17 @@ public class Function {
     @Column(name = "FUNCTION_CODE")
     private String functionCode;
 
+    @Basic
+    @Column(name = "PARENT_ID")
+    private String parentId;
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 
     public Long getId() {
         return id;
