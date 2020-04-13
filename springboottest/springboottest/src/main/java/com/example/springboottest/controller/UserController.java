@@ -67,6 +67,7 @@ public class UserController {
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         String[] listRoleInputStr  = user.getRole() ;
         List<Long> listRoleInput = new ArrayList<>();
+        User userClone =  userRepository.findById(user.getId()).get();
 //        HashMap<Long,Long> MapRoleIdInput = new HashMap<>() ;
 //        HashMap<Long,Long> MapRoleIdDb = new HashMap<>() ;
 //        List<RoleUser> listRoleUserDb = roleUserRepository.findRoleUserActiveByUserId(user.getId()) ;
@@ -111,8 +112,13 @@ public class UserController {
 //        }
 //        System.out.println("danh sach inActive " +  listRoleIdInActive);
 //        System.out.println("danh sach active " +  listRoleIdActive);
-
-        String passEncode  =  bCryptPasswordEncoder.encode(user.getPassword().trim()) ;
+        String pass = user.getPassword().trim() ;
+        String passEncode = null ;
+        if(pass != null && !pass.equals("") ){
+            passEncode  =  bCryptPasswordEncoder.encode(pass) ;
+        }else{
+            passEncode = userClone.getPassword() ;
+        }
         user.setPassword(passEncode);
         user.setRoles(roleRepository.finByRoleId(listRoleInput));
         User st = userService.save(user);

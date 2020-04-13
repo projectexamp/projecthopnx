@@ -1,0 +1,5 @@
++ Clone project :  git clone https://github.com/projectexamp/projecthopnx.git
++ Cài đặt mysql server :
+import file projecthopnx\mysql\small_project_aht.sql vào DB  
++Run project 
++Mở trình duyệt chạy localhost:8403/login : đăng nhập admin/1234
