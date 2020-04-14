@@ -86,6 +86,11 @@ public class MainController {
         return  "admin/rolemanager" ;
     }
 
+    @GetMapping("/helloworld")
+    public String hello(){
+        return  "helloworld" ;
+    }
+
     @GetMapping("/user")
     public String user(){
         return  "user/testuser" ;
