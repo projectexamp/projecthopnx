@@ -1,0 +1,12 @@
+server:
+  context-path: /codenotfound
+  port: 9090
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/primefacetest
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
