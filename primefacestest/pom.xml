@@ -13,10 +13,14 @@
   <url>https://www.codenotfound.com/jsf-primefaces/</url>
 
   <parent>
-    <groupId>org.joinfaces</groupId>
-    <artifactId>jsf-spring-boot-parent</artifactId>
-    <version>2.4.2</version>
-    <relativePath /> <!-- lookup parent from repository -->
+<!--    <groupId>org.joinfaces</groupId>-->
+<!--    <artifactId>jsf-spring-boot-parent</artifactId>-->
+<!--    <version>2.4.2</version>-->
+<!--    <relativePath /> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-parent</artifactId>
+      <version>2.2.5.RELEASE</version>
+      <relativePath/>
   </parent>
 
 
@@ -32,35 +36,29 @@
     <dependency>
       <groupId>org.joinfaces</groupId>
       <artifactId>jsf-spring-boot-starter</artifactId>
-      <version>2.4.2</version>
+      <version>4.1.0-rc1</version>
     </dependency>
-
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>2.2.5.RELEASE</version>
     </dependency>
 
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>2.2.5.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <version>2.2.5.RELEASE</version>
+      <version>2.1.8.RELEASE</version>
     </dependency>
     <!-- mysql -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
-<!--    add-->
-
-
 
     <!-- Security -->
     <dependency>
@@ -86,7 +84,7 @@
       <version>3.17</version>
     </dependency>
 
-    <!--		mail-->
+    <!--mail-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-mail</artifactId>
@@ -94,7 +92,6 @@
     </dependency>
 
   </dependencies>
-
 
 
 

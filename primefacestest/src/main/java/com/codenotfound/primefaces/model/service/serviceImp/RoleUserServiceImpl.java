@@ -41,7 +41,7 @@ public class RoleUserServiceImpl implements RoleUserService {
     }
 
     public RoleUser getbyId(long id) {
-       return roleUserRepository.findOne(id);
+       return roleUserRepository.findById(id).get();
     }
 
     @Override

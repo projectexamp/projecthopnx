@@ -37,7 +37,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public Student getbyId(long id) {
-       return userRepository.findOne(id);
+       return userRepository.findById(id).get();
     }
     
 //    public void delete(long id) {

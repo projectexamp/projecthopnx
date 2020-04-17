@@ -40,7 +40,7 @@ public class FunctionServiceImpl implements FunctionService {
 
     @Override
     public Function getbyId(Long id) {
-        return functionRepository.findOne(id);
+        return functionRepository.findById(id).get();
     }
 
     @Override

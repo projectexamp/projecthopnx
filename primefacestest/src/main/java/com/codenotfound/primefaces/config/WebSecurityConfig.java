@@ -55,6 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //que inicies la aplicacion, por lo cual tus contrasenas encriptadas no funcionaran bien
         return bCryptPasswordEncoder;
     }
+
+
 	
     @Autowired
     UserDetailsServiceImpl userDetailsService;

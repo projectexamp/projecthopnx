@@ -39,7 +39,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     }
 
     public RoleFunction getbyId(long id) {
-       return roleFunctionRepository.findOne(id);
+       return roleFunctionRepository.findById(id).get();
     }
 
     @Override

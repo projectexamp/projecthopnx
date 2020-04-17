@@ -13,6 +13,9 @@ import java.util.Set;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+//    @Query(value = "from Role r join RoleUser ru on ru.roleId = r.id where ru.userId=:userId and ru.isActive =0  ")
+//    public Set<Role> findRoleUserByUserIdActive(Long userId);
+
     @Query(value =  "from Role s where (:roleName is null or s.roleName like %:roleName%) and (:roleCode is null or s.roleCode like %:roleCode%) and s.status <> 2 ")
     List<Role> getListRole(@Param("roleName") String roleName, @Param("roleCode") String roleCode);
 
